@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        #game-board {
+            width: 300px;
+            height: 600px;
+            border: 1px solid black;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-board" class="container">
+        <div class="row">
+            <div class="cell col"></div>
+            <!-- Repeat for each cell in the row -->
+        </div>
+        <!-- Repeat for each row -->
+    </div>
+	<script>
+	// Create a 2D array to represent the game board
+var gameBoard = [];
+for (var i = 0; i < 20; i++) {
+    gameBoard[i] = [];
+    for (var j = 0; j < 10; j++) {
+        gameBoard[i][j] = 0;
+    }
+}
+// Function to update the HTML game board
+function drawBoard() {
+    var html = '';
+    for (var i = 0; i < gameBoard.length; i++) {
+        html += '<div class="row">';
+        for (var j = 0; j < gameBoard[i].length; j++) {
+            html += '<div class="cell col' + (gameBoard[i][j] ? ' occupied' : '') + '"></div>';
+        }
+        html += '</div>';
+    }
+    document.getElementById('game-board').innerHTML = html;
+}
+// Function to create a new piece
+function createPiece() {
+    var pieces = [
+        [[1, 1, 1, 1]], // I
+        [[1, 1], [1, 1]], // O
+        [[1, 1, 0], [0, 1, 1]], // Z
+        [[0, 1, 1], [1, 1]], // S
+        [[1, 1, 1], [0, 1, 0]], // T
+        [[0, 1, 1], [0, 1, 0], [0, 1, 0]], // L
+        [[1, 1, 0], [0, 1, 0], [0, 1, 0]] // J
+    ];
+    return pieces[Math.floor(Math.random() * pieces.length)];
+}
+
+var currentPiece = createPiece();
+var piecePosition = {x: 5, y: 0}; // Start the piece at the top middle of the board
+
+// Function to draw the current piece on the board
+// Function to draw the current piece on the board
+function drawPiece() {
+    for (var i = 0; i < currentPiece.length; i++) {
+        for (var j = 0; j < currentPiece[i].length; j++) {
+            if (currentPiece[i][j] === 1) {
+                // Check if the piece is within the bounds of the game board
+                if (piecePosition.y + i < gameBoard.length && piecePosition.x + j < gameBoard[0].length) {
+                    gameBoard[piecePosition.y + i][piecePosition.x + j] = 1;
+                }
+            }
+        }
+    }
+}
+
+
+// Game loop
+function gameLoop() {
+    // Clear the current piece from the board
+    for (var i = 0; i < currentPiece.length; i++) {
+        for (var j = 0; j < currentPiece[i].length; j++) {
+            if (currentPiece[i][j] === 1) {
+                gameBoard[piecePosition.y + i][piecePosition.x + j] = 0;
+            }
+        }
+    }
+
+    // Update the position of the current piece (make it fall down)
+    piecePosition.y++;
+
+    // Draw the current piece at its new position
+    drawPiece();
+	
+	    // Update the HTML game board
+    drawBoard();
+
+    // Call the game loop again after a delay
+    setTimeout(gameLoop, 1000);
+}
+
+// Start the game loop
+gameLoop();
+
+
+</script>
+</body>
+</html>
